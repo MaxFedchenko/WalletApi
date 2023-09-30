@@ -13,9 +13,10 @@ namespace WalletApi.Mappings
 
         public void MapTransactions() 
         {
-            CreateMap<CreateTransaction, Transaction>();
+            CreateMap<CreateTransaction, Transaction>()
+                .ForMember(m => m.AuthorizedUserId, cfg => cfg.MapFrom(e => e.UserId));
             CreateMap<Transaction, TransactionInfo>()
-                .ForMember(m => m.User, cfg => cfg.MapFrom(e => e.Card.User.Name));
+                .ForMember(m => m.User, cfg => cfg.MapFrom(e => e.AuthorizedUser.Name));
             CreateMap<Transaction, TransactionDetails>()
                 .IncludeBase<Transaction, TransactionInfo>();
         }

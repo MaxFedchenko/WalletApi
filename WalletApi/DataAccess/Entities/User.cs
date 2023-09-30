@@ -8,5 +8,6 @@ namespace WalletApi.DataAccess.Entities
         public string Name { get; set; }
 
         public Card Card { get; set; }
+        public List<Transaction> Transactions { get; set; }
     }
 }

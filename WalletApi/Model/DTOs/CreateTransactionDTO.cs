@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WalletApi.Core.Enums;
 
 namespace WalletApi.Model.DTOs
 {
@@ -10,9 +9,12 @@ namespace WalletApi.Model.DTOs
         [Required]
         public string Type { get; set; }
         [Required]
+        [Range(0, double.MaxValue, ErrorMessage="Sum can't be negative")]
         public decimal Sum { get; set; }
         [Required]
         public bool IsPending { get; set; }
+        [Required]
+        public int CardId { get; set; }
         [Required]
         public int UserId { get; set; }
         public string? Icon { get; set; }

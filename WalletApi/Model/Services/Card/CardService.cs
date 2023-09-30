@@ -15,7 +15,7 @@ namespace WalletApi.Model.Services
         public async Task<Card?> GetByUserId(int user_id)
         {
             return await context.Cards.Where(c => c.UserId == user_id)
-                .Select(c => new Card { Balance = c.Balance })
+                .Select(c => new Card { Id = c.Id, Balance = c.Balance })
                 .FirstOrDefaultAsync();
         }
     }

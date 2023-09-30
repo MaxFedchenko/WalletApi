@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Text;
 using WalletApi.Core.Enums;
 using WalletApi.Model.DTOs;
@@ -63,17 +65,25 @@ namespace WalletApi.Controllers
             {
                 var tran = mapper.Map<CreateTransaction>(dto);
                 tran.Date = DateTime.Now;
-                tran_id = await transactionService.Create(tran, dto.UserId);
+                tran_id = await transactionService.Create(tran);
             }
-            catch (ArgumentException ex) 
+            catch (AutoMapperMappingException ex) when (ex.MemberMap.ToString() == nameof(dto.Type))
             {
-                if (ex.ParamName == "user_id")
-                    return BadRequest(new { message = "No such user exists" });
-                else if (ex.ParamName == "Sum")
-                    return BadRequest(new { message = "The transaction is invalid as it falls outside the acceptable range" });
-                else throw ex;
+                return BadRequest(new { message = "Invalid transaction type. Valid types are 'payment' and 'credit'" });
             }
-
+            catch (ArgumentException ex) when (ex.ParamName == nameof(dto.CardId))
+            {
+                return BadRequest(new { message = "No such card exists" });
+            }
+            catch (ArgumentException ex) when (ex.ParamName == nameof(dto.Sum))
+            {
+                return BadRequest(new { message = "The transaction sum is invalid" });
+            }
+            catch (DbUpdateException) 
+            {
+                return BadRequest(new { message = "Invalid transaction" });
+            }
+            
             return StatusCode(201, tran_id);
         }
     }

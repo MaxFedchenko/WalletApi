@@ -20,6 +20,9 @@ namespace WalletApi.DataAccess.Entities
         public bool IsPending { get; set; }
         public byte[]? Icon { get; set; }
 
+        public int AuthorizedUserId { get; set; }
+        public User AuthorizedUser { get; set; }
+
         public int CardId { get; set; }
         public Card Card { get; set; }
     }

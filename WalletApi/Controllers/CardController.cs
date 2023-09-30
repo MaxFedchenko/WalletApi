@@ -38,6 +38,7 @@ namespace WalletApi.Controllers
 
             return Ok(new CardInfoDTO
             {
+                CardId = card.Id,
                 Balance = card.Balance,
                 Available = cardLimit - card.Balance,
                 DailyPoints = points >= 1000 ? Math.Round(points / 1000.0).ToString("0K") : points.ToString(),

@@ -22,7 +22,7 @@ namespace WalletApi.Model.Services
         {
             return await context.Transactions
                 .Include(t => t.Card)
-                .ThenInclude(c => c.User)
+                .Include(t => t.AuthorizedUser)
                 .Where(t => t.Id == transaction_id)
                 .Where(t => t.Card.UserId == user_id)
                 .Select(t => mapper.Map<TransactionDetails>(t))
@@ -33,7 +33,7 @@ namespace WalletApi.Model.Services
         {
             return await context.Transactions
                 .Include(t => t.Card)
-                .ThenInclude(c => c.User)
+                .Include(t => t.AuthorizedUser)
                 .Where(t => t.Card.UserId == user_id)
                 .OrderByDescending(t => t.Date)
                 .Skip(offset).Take(amount)
@@ -41,10 +41,10 @@ namespace WalletApi.Model.Services
                 .ToListAsync();
         }
 
-        public async Task<int> Create(CreateTransaction transaction, int user_id)
+        public async Task<int> Create(CreateTransaction transaction)
         {
-            var card = await context.Cards.FirstOrDefaultAsync(c => c.UserId == user_id);
-            if (card == null) throw new ArgumentException(nameof(user_id));
+            var card = await context.Cards.FirstOrDefaultAsync(c => c.Id == transaction.CardId);
+            if (card == null) throw new ArgumentException(null, nameof(transaction.CardId));
 
             // Update Card Balance
             card.Balance = card.Balance + transaction.Type switch
