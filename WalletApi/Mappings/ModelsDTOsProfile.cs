@@ -31,7 +31,7 @@ namespace WalletApi.Mappings
             CreateMap<CreateTransactionDTO, CreateTransaction>()
                 .ForMember(m => m.Type, cfg => cfg.MapFrom(d => Enum.Parse<TransactionType>(d.Type, true)))
                 .ForMember(m => m.Icon, cfg => cfg.MapFrom(d => string.IsNullOrWhiteSpace(d.Icon) ? 
-                    null : WebEncoders.Base64UrlDecode(d.Icon.Split(',', StringSplitOptions.None)[1])));
+                    null : WebEncoders.Base64UrlDecode(d.Icon.Split(',', StringSplitOptions.None).Last())));
 
             CreateMap<TransactionInfo, TransactionDTO>()
                 .ForMember(d => d.Type, cfg => cfg.MapFrom(m => m.Type.ToString()))
