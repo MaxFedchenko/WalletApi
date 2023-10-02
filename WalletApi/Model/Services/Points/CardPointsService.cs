@@ -2,23 +2,49 @@
 {
     public class CardPointsService : ICardPointsService
     {
-        public int GetCurrentPoints()
+        public long GetPoints(DateTime date)
         {
-            var now = DateTime.Now;
-            var m = now.Month % 12 / 3 * 3;
-            m = m != 0 ? m : 12;
-            var first_day_date = new DateTime(now.Year, m, 1);
+            date = date.Date;
 
-            var season_day = now.DayOfYear - first_day_date.DayOfYear + 1;
+            var first_day_date = GetSeasonFirstDayDate(date);
+
+            var season_day = (int)(date - first_day_date).TotalDays + 1;
 
             return GetPointsByDay(season_day);
         }
 
-        private int GetPointsByDay(int day) => day switch
+        private DateTime GetSeasonFirstDayDate(DateTime date) 
         {
-            1 => 2,
-            2 => 3,
-            _ => GetPointsByDay(day - 2) + (int)Math.Round(GetPointsByDay(day - 1) * 0.6)
-        };
+            int month = date.Month switch
+            {
+                12 or 1 or 2 => 12,
+                3 or 4 or 5 => 3,
+                6 or 7 or 8 => 6,
+                9 or 10 or 11 => 9,
+                _ => throw new NotSupportedException() // Unreachable code
+            };
+
+            int year = date.Month == 1 || date.Month == 2 ? date.Year - 1 : date.Year;
+
+            return new DateTime(year, month, 1);
+        }
+
+        private long GetPointsByDay(int day)
+        {
+            if (day == 1) return 1;
+            if (day == 2) return 2;
+
+            long prev2_points = 1;
+            long prev_points = 2;
+            long points = 0;
+            for (int i = 3; i <= day; i++)
+            {
+                points = (long)Math.Round(prev_points * 0.6) + prev2_points;
+                prev2_points = prev_points;
+                prev_points = points;
+            }
+
+            return points;
+        }
     }
 }

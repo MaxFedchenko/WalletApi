@@ -2,6 +2,6 @@
 {
     public interface ICardPointsService
     {
-        int GetCurrentPoints();
+        long GetPoints(DateTime date);
     }
 }

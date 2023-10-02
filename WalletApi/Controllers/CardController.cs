@@ -34,7 +34,7 @@ namespace WalletApi.Controllers
             var card = await cardService.GetByUserId(user_id);
             if (card == null) return NotFound();
 
-            int points = cardPointsService.GetCurrentPoints();
+            long points = cardPointsService.GetPoints(DateTime.Now);
 
             return Ok(new CardInfoDTO
             {
