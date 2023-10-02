@@ -9,17 +9,17 @@ namespace WalletApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService usersService;
+        private readonly IUserService _usersService;
 
         public UserController(IUserService usersService) 
         {
-            this.usersService = usersService;
+            _usersService = usersService;
         }
 
         [HttpPost]
         public async Task<ActionResult> Create(CreateUserDTO user) 
         {
-            var user_id = await usersService.Create(user.Name);
+            var user_id = await _usersService.Create(user.Name);
 
             return StatusCode(201, user_id);
         }

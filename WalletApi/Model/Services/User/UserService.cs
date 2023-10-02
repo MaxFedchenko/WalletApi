@@ -5,11 +5,11 @@ namespace WalletApi.Model.Services
 {
     public class UserService : IUserService
     {
-        private readonly WalletContext context;
+        private readonly WalletContext _context;
 
         public UserService(WalletContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public async Task<int> Create(string userName)
@@ -23,9 +23,9 @@ namespace WalletApi.Model.Services
                 }
             };
 
-            context.Add(user);
+            _context.Add(user);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return user.Id;
         }

@@ -5,7 +5,7 @@ namespace WalletApi.DataAccess.EF
 {
     public class WalletContext : DbContext
     {
-        private readonly string connString;
+        private readonly string _connString;
 
         public DbSet<User> Users { get; set; }
         public DbSet<Card> Cards { get; set; }
@@ -13,13 +13,13 @@ namespace WalletApi.DataAccess.EF
 
         public WalletContext(IConfiguration appConfig)
         {
-            connString = appConfig.GetConnectionString("DefaultConnection")!;
+            _connString = appConfig.GetConnectionString("DefaultConnection")!;
             Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connString);
+            optionsBuilder.UseSqlite(_connString);
         }
     }
 }

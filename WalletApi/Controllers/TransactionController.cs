@@ -15,30 +15,30 @@ namespace WalletApi.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly ITransactionService transactionService;
-        private readonly IConfiguration configuration;
-        private readonly IMapper mapper;
+        private readonly ITransactionService _transactionService;
+        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
         public TransactionController(IConfiguration configuration, ITransactionService transactionService, IMapper mapper)
         {
-            this.transactionService = transactionService;
-            this.configuration = configuration;
-            this.mapper = mapper;
+            _transactionService = transactionService;
+            _configuration = configuration;
+            _mapper = mapper;
         }
 
         private void IfNoIconAddDefault(TransactionDTO dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Icon))
-                dto.Icon = configuration.GetValue<string>("DefaultTransactionIcon")!;
+                dto.Icon = _configuration.GetValue<string>("DefaultTransactionIcon")!;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id, [Required] int userId) 
         {
-            var transaction = await transactionService.GetDetails(id, userId);
+            var transaction = await _transactionService.GetDetails(id, userId);
             if (transaction == null) return NotFound();
 
-            var dto = mapper.Map<TransactionDetailsDTO>(transaction);
+            var dto = _mapper.Map<TransactionDetailsDTO>(transaction);
             IfNoIconAddDefault(dto);
             return Ok(dto); 
         }
@@ -46,11 +46,11 @@ namespace WalletApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRange([Required] int userId, int offset = 0, int amount = 10) 
         {
-            var transactions = await transactionService.GetRange(offset, amount, userId);
+            var transactions = await _transactionService.GetRange(offset, amount, userId);
 
             return Ok(transactions.Select(t => 
             {
-                var dto = mapper.Map<TransactionDTO>(t);
+                var dto = _mapper.Map<TransactionDTO>(t);
                 IfNoIconAddDefault(dto);
                 return dto;
             }));
@@ -62,9 +62,9 @@ namespace WalletApi.Controllers
             int tran_id;
             try
             {
-                var tran = mapper.Map<CreateTransaction>(dto);
+                var tran = _mapper.Map<CreateTransaction>(dto);
                 tran.Date = DateTime.Now;
-                tran_id = await transactionService.Create(tran);
+                tran_id = await _transactionService.Create(tran);
             }
             catch (AutoMapperMappingException ex) when (ex.MemberMap.ToString() == nameof(dto.Type))
             {

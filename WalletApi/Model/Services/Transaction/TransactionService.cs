@@ -7,43 +7,43 @@ namespace WalletApi.Model.Services
 {
     public class TransactionService : ITransactionService
     {
-        private readonly WalletContext context;
-        private readonly IMapper mapper;
-        private readonly decimal cardLimit;
+        private readonly WalletContext _context;
+        private readonly IMapper _mapper;
+        private readonly decimal _cardLimit;
 
         public TransactionService(WalletContext context, IConfiguration configuration, IMapper mapper)
         {
-            this.context = context;
-            this.mapper = mapper;
-            cardLimit = configuration.GetValue<decimal>("CardLimit");
+            _context = context;
+            _mapper = mapper;
+            _cardLimit = configuration.GetValue<decimal>("CardLimit");
         }
 
         public async Task<TransactionDetails?> GetDetails(int transactionId, int userId)
         {
-            return await context.Transactions
+            return await _context.Transactions
                 .Include(t => t.Card)
                 .Include(t => t.AuthorizedUser)
                 .Where(t => t.Id == transactionId)
                 .Where(t => t.Card!.UserId == userId)
-                .Select(t => mapper.Map<TransactionDetails>(t))
+                .Select(t => _mapper.Map<TransactionDetails>(t))
                 .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TransactionInfo>> GetRange(int offset, int amount, int userId)
         {
-            return await context.Transactions
+            return await _context.Transactions
                 .Include(t => t.Card)
                 .Include(t => t.AuthorizedUser)
                 .Where(t => t.Card!.UserId == userId)
                 .OrderByDescending(t => t.Date)
                 .Skip(offset).Take(amount)
-                .Select(t => mapper.Map<TransactionInfo>(t))
+                .Select(t => _mapper.Map<TransactionInfo>(t))
                 .ToListAsync();
         }
 
         public async Task<int> Create(CreateTransaction transaction)
         {
-            var card = await context.Cards.FirstOrDefaultAsync(c => c.Id == transaction.CardId);
+            var card = await _context.Cards.FirstOrDefaultAsync(c => c.Id == transaction.CardId);
             if (card == null) throw new ArgumentException(null, nameof(transaction.CardId));
 
             // Update Card Balance
@@ -53,15 +53,15 @@ namespace WalletApi.Model.Services
                 TransactionType.Credit => -1 * transaction.Sum,
                 _ => throw new NotSupportedException()
             };
-            if (card.Balance < 0 || card.Balance > cardLimit)
+            if (card.Balance < 0 || card.Balance > _cardLimit)
                 throw new ArgumentOutOfRangeException(nameof(transaction.Sum));
 
             // Add New Transaction
-            var tran_entity = mapper.Map<DataAccess.Entities.Transaction>(transaction);
+            var tran_entity = _mapper.Map<DataAccess.Entities.Transaction>(transaction);
             tran_entity.CardId = card.Id;
-            context.Transactions.Add(tran_entity);
+            _context.Transactions.Add(tran_entity);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return tran_entity.Id;
         }

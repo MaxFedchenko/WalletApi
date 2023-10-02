@@ -15,30 +15,30 @@ namespace WalletApi.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
-        private readonly ICardService cardService;
-        private readonly ICardPointsService cardPointsService;
-        private readonly decimal cardLimit;
+        private readonly ICardService _cardService;
+        private readonly ICardPointsService _cardPointsService;
+        private readonly decimal _cardLimit;
 
        public CardController(IConfiguration configuration, ICardService cardService, ICardPointsService cardPointsService)
         {
-            this.cardService = cardService;
-            this.cardPointsService = cardPointsService;
-            cardLimit = configuration.GetValue<decimal>("CardLimit");
+            _cardService = cardService;
+            _cardPointsService = cardPointsService;
+            _cardLimit = configuration.GetValue<decimal>("CardLimit");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetInfo([Required] int userId) 
         {
-            var card = await cardService.GetByUserId(userId);
+            var card = await _cardService.GetByUserId(userId);
             if (card == null) return NotFound();
 
-            long points = cardPointsService.GetPoints(DateTime.Now);
+            long points = _cardPointsService.GetPoints(DateTime.Now);
 
             return Ok(new CardInfoDTO
             {
                 CardId = card.Id,
                 Balance = card.Balance,
-                Available = cardLimit - card.Balance,
+                Available = _cardLimit - card.Balance,
                 DailyPoints = points >= 1000 ? Math.Round(points / 1000.0).ToString("0K") : points.ToString(),
                 Month = DateTime.Now.ToString("MMMM")
             });
