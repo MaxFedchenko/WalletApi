@@ -2,6 +2,6 @@
 {
     public interface IUserService
     {
-        Task<int> Create(string user_name);
+        Task<int> Create(string userName);
     }
 }

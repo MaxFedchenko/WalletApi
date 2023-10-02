@@ -27,9 +27,9 @@ namespace WalletApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetInfo([Required] int user_id) 
+        public async Task<IActionResult> GetInfo([Required] int userId) 
         {
-            var card = await cardService.GetByUserId(user_id);
+            var card = await cardService.GetByUserId(userId);
             if (card == null) return NotFound();
 
             long points = cardPointsService.GetPoints(DateTime.Now);

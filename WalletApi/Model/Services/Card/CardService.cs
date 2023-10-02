@@ -5,16 +5,16 @@ namespace WalletApi.Model.Services
 {
     public class CardService : ICardService
     {
-        public readonly WalletContext context;
+        private readonly WalletContext context;
 
         public CardService(WalletContext context)
         {
             this.context = context;
         }
 
-        public async Task<Card?> GetByUserId(int user_id)
+        public async Task<Card?> GetByUserId(int userId)
         {
-            return await context.Cards.Where(c => c.UserId == user_id)
+            return await context.Cards.Where(c => c.UserId == userId)
                 .Select(c => new Card { Id = c.Id, Balance = c.Balance })
                 .FirstOrDefaultAsync();
         }

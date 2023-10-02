@@ -12,11 +12,11 @@ namespace WalletApi.Model.Services
             this.context = context;
         }
 
-        public async Task<int> Create(string user_name)
+        public async Task<int> Create(string userName)
         {
             var user = new User
             {
-                Name = user_name,
+                Name = userName,
                 Card = new DataAccess.Entities.Card
                 {
                     Balance = 0

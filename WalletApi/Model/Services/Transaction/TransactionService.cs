@@ -7,8 +7,8 @@ namespace WalletApi.Model.Services
 {
     public class TransactionService : ITransactionService
     {
-        public readonly WalletContext context;
-        public readonly IMapper mapper;
+        private readonly WalletContext context;
+        private readonly IMapper mapper;
         private readonly decimal cardLimit;
 
         public TransactionService(WalletContext context, IConfiguration configuration, IMapper mapper)
@@ -18,23 +18,23 @@ namespace WalletApi.Model.Services
             cardLimit = configuration.GetValue<decimal>("CardLimit");
         }
 
-        public async Task<TransactionDetails?> GetDetails(int transaction_id, int user_id)
+        public async Task<TransactionDetails?> GetDetails(int transactionId, int userId)
         {
             return await context.Transactions
                 .Include(t => t.Card)
                 .Include(t => t.AuthorizedUser)
-                .Where(t => t.Id == transaction_id)
-                .Where(t => t.Card!.UserId == user_id)
+                .Where(t => t.Id == transactionId)
+                .Where(t => t.Card!.UserId == userId)
                 .Select(t => mapper.Map<TransactionDetails>(t))
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<TransactionInfo>> GetRange(int offset, int amount, int user_id)
+        public async Task<IEnumerable<TransactionInfo>> GetRange(int offset, int amount, int userId)
         {
             return await context.Transactions
                 .Include(t => t.Card)
                 .Include(t => t.AuthorizedUser)
-                .Where(t => t.Card!.UserId == user_id)
+                .Where(t => t.Card!.UserId == userId)
                 .OrderByDescending(t => t.Date)
                 .Skip(offset).Take(amount)
                 .Select(t => mapper.Map<TransactionInfo>(t))

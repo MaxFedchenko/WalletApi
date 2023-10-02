@@ -34,13 +34,13 @@
             if (day == 1) return 1;
             if (day == 2) return 2;
 
-            long prev2_points = 1;
+            long second_prev_points = 1;
             long prev_points = 2;
             long points = 0;
             for (int i = 3; i <= day; i++)
             {
-                points = (long)Math.Round(prev_points * 0.6) + prev2_points;
-                prev2_points = prev_points;
+                points = (long)Math.Round(prev_points * 0.6) + second_prev_points;
+                second_prev_points = prev_points;
                 prev_points = points;
             }
 

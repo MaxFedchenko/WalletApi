@@ -33,9 +33,9 @@ namespace WalletApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id, [Required] int user_id) 
+        public async Task<IActionResult> Get(int id, [Required] int userId) 
         {
-            var transaction = await transactionService.GetDetails(id, user_id);
+            var transaction = await transactionService.GetDetails(id, userId);
             if (transaction == null) return NotFound();
 
             var dto = mapper.Map<TransactionDetailsDTO>(transaction);
@@ -44,9 +44,9 @@ namespace WalletApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRange([Required] int user_id, int offset = 0, int amount = 10) 
+        public async Task<IActionResult> GetRange([Required] int userId, int offset = 0, int amount = 10) 
         {
-            var transactions = await transactionService.GetRange(offset, amount, user_id);
+            var transactions = await transactionService.GetRange(offset, amount, userId);
 
             return Ok(transactions.Select(t => 
             {

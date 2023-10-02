@@ -2,6 +2,6 @@
 {
     public interface ICardService
     {
-        Task<Card?> GetByUserId(int user_id);
+        Task<Card?> GetByUserId(int userId);
     }
 }
