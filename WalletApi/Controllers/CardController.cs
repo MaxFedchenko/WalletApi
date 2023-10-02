@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WalletApi.DataAccess.EF;
-using WalletApi.DataAccess.Entities;
 using WalletApi.Model.DTOs;
 using WalletApi.Model.Services;
 

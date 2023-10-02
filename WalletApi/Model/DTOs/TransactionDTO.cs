@@ -2,13 +2,13 @@
 {
     public class TransactionDTO
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public decimal Sum { get; set; }
-        public string Date { get; set; }
-        public bool IsPending { get; set; }
-        public string User { get; set; }
-        public string Icon { get; set; }
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Type { get; set; }
+        public required decimal Sum { get; set; }
+        public required string Date { get; set; }
+        public required bool IsPending { get; set; }
+        public required string User { get; set; }
+        public string? Icon { get; set; }
     }
 }

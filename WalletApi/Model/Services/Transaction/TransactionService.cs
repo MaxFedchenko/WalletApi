@@ -24,7 +24,7 @@ namespace WalletApi.Model.Services
                 .Include(t => t.Card)
                 .Include(t => t.AuthorizedUser)
                 .Where(t => t.Id == transaction_id)
-                .Where(t => t.Card.UserId == user_id)
+                .Where(t => t.Card!.UserId == user_id)
                 .Select(t => mapper.Map<TransactionDetails>(t))
                 .FirstOrDefaultAsync();
         }
@@ -34,7 +34,7 @@ namespace WalletApi.Model.Services
             return await context.Transactions
                 .Include(t => t.Card)
                 .Include(t => t.AuthorizedUser)
-                .Where(t => t.Card.UserId == user_id)
+                .Where(t => t.Card!.UserId == user_id)
                 .OrderByDescending(t => t.Date)
                 .Skip(offset).Take(amount)
                 .Select(t => mapper.Map<TransactionInfo>(t))

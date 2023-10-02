@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using System.Text;
-using WalletApi.Core.Enums;
 using WalletApi.Model.DTOs;
 using WalletApi.Model.Services;
 

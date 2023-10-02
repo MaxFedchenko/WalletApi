@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Builder;
 using WalletApi.DataAccess.EF;
 using WalletApi.Mappings;
 using WalletApi.Model.Services;
@@ -33,9 +32,10 @@ else
 {
     app.UseExceptionHandler(app =>
     {
-        app.Run(async context =>
+        app.Run(context =>
         {
             context.Response.StatusCode = 500;
+            return Task.CompletedTask;
         });
     });
 }

@@ -2,10 +2,10 @@
 {
     public class CardInfoDTO
     {
-        public int CardId { get; set; }
-        public decimal Balance { get; set; }
-        public decimal Available { get; set; }
-        public string DailyPoints { get; set; }
-        public string Month { get; set; }
+        public required int CardId { get; set; }
+        public required decimal Balance { get; set; }
+        public required decimal Available { get; set; }
+        public required string DailyPoints { get; set; }
+        public required string Month { get; set; }
     }
 }

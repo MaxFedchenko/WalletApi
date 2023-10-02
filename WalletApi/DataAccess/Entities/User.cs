@@ -4,10 +4,9 @@ namespace WalletApi.DataAccess.Entities
 {
     public class User : Entity<int>
     {
-        [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
-        public Card Card { get; set; }
-        public List<Transaction> Transactions { get; set; }
+        public Card? Card { get; set; }
+        public List<Transaction>? Transactions { get; set; }
     }
 }
